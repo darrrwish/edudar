@@ -498,7 +498,7 @@ canvas.chart-canvas{width:100%!important;height:250px!important;display:block}
         </div>
         <div class="form-error" id="err-adm"></div>
         <button class="btn-primary" id="btn-login-adm"><svg width="15" height="15"><use href="#ic-book"/></svg> إنشاء حساب</button>
-        <div class="login-hint">أول شخص يسجّل يصبح المسؤول الرئيسي للمنصة تلقائيًا</div>
+        <div class="login-hint">طلاب مستر أحمد خالد</div>
       </div>
     </div>
   </div>
@@ -697,7 +697,7 @@ function _setCloudStatus(state, msg) {
   const dot = document.getElementById('cloud-dot');
   if (!dot) return;
   const colors = { ok: 'var(--green)', err: 'var(--red)', sync: 'var(--amber)' };
-  const tips   = { ok: '☁️ السحابة متزامنة', err: '⚠️ فشل الحفظ: ' + (msg||''), sync: '⏳ جارٍ الحفظ...' };
+  const tips   = { ok: ' السحابة متزامنة', err: ' فشل الحفظ: ' + (msg||''), sync: ' جارٍ الحفظ...' };
   dot.style.background = colors[state] || colors.sync;
   dot.title = tips[state] || '';
   dot.classList.remove('hidden');
@@ -3620,7 +3620,7 @@ END; $$;</textarea>
 /* ==================== CLOUD DIAGNOSTICS ==================== */
 async function cloudDiagnostic() {
   const el = document.getElementById('cloud-diag-result');
-  if (el) el.innerHTML = '<span class="badge b-amber">⏳ جارٍ الفحص...</span>';
+  if (el) el.innerHTML = '<span class="badge b-amber"> جارٍ الفحص...</span>';
   try {
     // Test read
     const { data, error: rErr } = await sb.rpc('get_app_setting', { p_key: 'lessons_data' });
@@ -3628,8 +3628,8 @@ async function cloudDiagnostic() {
     const cloudLessons = data?.[0]?.value?._lessons || [];
     const cloudUpdated = data?.[0]?.value?._updated || 'غير محدد';
     const localUpdated = lsGet()._updated || 'غير محدد';
-    const msg = `☁️ السحابة: ${cloudLessons.length} درس — آخر تحديث: ${cloudUpdated.slice(0,19).replace('T',' ')}
-💾 محلي: ${S.lessons.length} درس — آخر تحديث: ${localUpdated.slice(0,19).replace('T',' ')}`;
+    const msg = ` السحابة: ${cloudLessons.length} درس — آخر تحديث: ${cloudUpdated.slice(0,19).replace('T',' ')}
+ محلي: ${S.lessons.length} درس — آخر تحديث: ${localUpdated.slice(0,19).replace('T',' ')}`;
     if (el) el.innerHTML = `<div class="notif-row" style="flex-direction:column;align-items:flex-start;font-family:var(--mono);font-size:.74rem;gap:.3rem;white-space:pre">${msg}</div>`;
     _setCloudStatus('ok');
   } catch(e) {
@@ -3647,16 +3647,16 @@ async function forceSyncNow() {
 }
 async function forceLoadCloud() {
   const el = document.getElementById('cloud-diag-result');
-  if (el) el.innerHTML = '<span class="badge b-amber">⏳ جارٍ التحميل...</span>';
+  if (el) el.innerHTML = '<span class="badge b-amber"> جارٍ التحميل...</span>';
   const cloudData = await loadFromCloud();
   if (!cloudData?._lessons?.length) {
     toast('السحابة فارغة أو غير متصلة', 'warn');
-    if (el) el.innerHTML = '<span class="badge b-red">❌ لا توجد بيانات في السحابة</span>';
+    if (el) el.innerHTML = '<span class="badge b-red"> لا توجد بيانات في السحابة</span>';
     return;
   }
   _applyCloudData(cloudData);
   if (S.isAdmin) renderAdminTab(); else { buildSb(); renderLesson(S.lessonIdx); }
-  toast(`✅ تم تحميل ${cloudData._lessons.length} درس من السحابة`, 'ok');
+  toast(` تم تحميل ${cloudData._lessons.length} درس من السحابة`, 'ok');
   await cloudDiagnostic();
 }
 
